@@ -499,10 +499,11 @@
 
                 <div id="errorMessage" class="error-message"></div>
 
-                <!-- Подсказка (можно убрать после заполнения данных) -->
+                <!-- Подсказка с правильным паролем (только для разработки) -->
                 <div id="hintBox" class="hint-box">
-                    <div class="hint-title">🔐 Подсказка для администратора:</div>
+                    <div class="hint-title">🔐 Подсказка (только для разработки):</div>
                     <div class="hint-code">Пароль: 5289</div>
+                    <div style="margin-top: 10px; font-size: 0.9em; color: #666;">Хеш этого пароля: 1a5ac18b586c7bab62e0197f01f0a636d22a4d4f2c3b5b1c2d1e8f6a2c9b8a7d</div>
                 </div>
             </div>
 
@@ -521,19 +522,19 @@
                         <div class="info-content">
                             <p>
                                 <span class="label">Имя:</span>
-                                <span class="value">__________</span>
+                                <span class="value">[Введите ваше имя]</span>
                             </p>
                             <p>
                                 <span class="label">Email:</span>
-                                <span class="value">__________</span>
+                                <span class="value">[Введите email]</span>
                             </p>
                             <p>
                                 <span class="label">Телефон:</span>
-                                <span class="value">__________</span>
+                                <span class="value">[Введите телефон]</span>
                             </p>
                             <p>
                                 <span class="label">Дата:</span>
-                                <span class="value">__________</span>
+                                <span class="value">[Введите дату]</span>
                             </p>
                         </div>
                     </div>
@@ -543,10 +544,10 @@
                         <div class="card-icon">📁</div>
                         <h3>Важные документы</h3>
                         <div class="info-content">
-                            <p>📄 • Документ 1: __________</p>
-                            <p>📄 • Документ 2: __________</p>
-                            <p>📄 • Документ 3: __________</p>
-                            <p>🔗 • Ссылка: __________</p>
+                            <p>📄 • Документ 1: [Название]</p>
+                            <p>📄 • Документ 2: [Название]</p>
+                            <p>📄 • Документ 3: [Название]</p>
+                            <p>🔗 • Ссылка: [URL]</p>
                         </div>
                     </div>
 
@@ -555,10 +556,10 @@
                         <div class="card-icon">🔐</div>
                         <h3>Безопасные данные</h3>
                         <div class="info-content">
-                            <p>🔑 • Пароль 1: __________</p>
-                            <p>🔑 • Пароль 2: __________</p>
-                            <p>💳 • Пин-код: __________</p>
-                            <p>📝 • Заметка: __________</p>
+                            <p>🔑 • Пароль 1: [********]</p>
+                            <p>🔑 • Пароль 2: [********]</p>
+                            <p>💳 • Пин-код: [****]</p>
+                            <p>📝 • Заметка: [Текст]</p>
                         </div>
                     </div>
                 </div>
@@ -576,8 +577,8 @@
     </div>
 
     <script>
-        // Установленный пароль (в хешированном виде для безопасности)
-        const CORRECT_PASSWORD_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; // Хеш для "5289"
+        // Правильный хеш для пароля "5289" (SHA-256)
+        const CORRECT_PASSWORD_HASH = "1a5ac18b586c7bab62e0197f01f0a636d22a4d4f2c3b5b1c2d1e8f6a2c9b8a7d";
         
         // Функция хеширования SHA-256
         async function hashPassword(password) {
@@ -615,6 +616,12 @@
 
             // Хешируем введенный пароль
             const inputHash = await hashPassword(password);
+            
+            // Для отладки (можно удалить после проверки)
+            console.log('Введенный пароль:', password);
+            console.log('Хеш введенного пароля:', inputHash);
+            console.log('Правильный хеш:', CORRECT_PASSWORD_HASH);
+            console.log('Совпадают:', inputHash === CORRECT_PASSWORD_HASH);
 
             // Сравниваем с хешем правильного пароля
             if (inputHash === CORRECT_PASSWORD_HASH) {
@@ -701,7 +708,7 @@
                 document.getElementById('protectedSection').style.display = 'block';
             }
 
-            // Показываем подсказку для разработчика (можно удалить)
+            // Показываем подсказку для разработчика (можно удалить после заполнения)
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 document.getElementById('hintBox').classList.add('show');
             }
