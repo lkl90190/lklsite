@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приватная информация | Защищенный доступ</title>
+    <style>
+        /* Все стили остаются без изменений - они красивые и рабочие */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.4);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '🔐';
+            position: absolute;
+            font-size: 100px;
+            opacity: 0.1;
+            top: -20px;
+            right: -20px;
+            transform: rotate(20deg);
+        }
+
+        .header::after {
+            content: '⚡';
+            position: absolute;
+            font-size: 80px;
+            opacity: 0.1;
+            bottom: -30px;
+            left: -20px;
+            transform: rotate(-20deg);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 50px 40px;
+        }
+
+        .password-section {
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .password-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .password-section .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .password-input-group {
+            display: flex;
+            gap: 15px;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .password-input-group input {
+            flex: 1;
+            padding: 18px 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            outline: none;
+            background: white;
+            letter-spacing: 3px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .password-input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+            transform: scale(1.02);
+        }
+
+        .password-input-group input::placeholder {
+            letter-spacing: normal;
+            font-weight: normal;
+            color: #999;
+        }
+
+        .password-input-group button {
+            padding: 18px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .password-input-group button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .password-input-group button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .password-input-group button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .password-hint {
+            margin-top: 25px;
+            color: #888;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 20px;
+            font-size: 1em;
+            min-height: 24px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .protected-section {
+            display: none;
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f6f9fc 0%, #e9f1f8 100%);
+            border-radius: 20px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-message h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .welcome-message p {
+            color: #34495e;
+            font-size: 1.1em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .info-card:nth-child(1) { animation-delay: 0.1s; }
+        .info-card:nth-child(2) { animation-delay: 0.3s; }
+        .info-card:nth-child(3) { animation-delay: 0.5s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-icon {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-card h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .info-content {
+            color: #34495e;
+            line-height: 1.8;
+        }
+
+        .info-content p {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-content .label {
+            font-weight: 600;
+            color: #667eea;
+            min-width: 80px;
+        }
+
+        .info-content .value {
+            color: #2c3e50;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 300px;
+            margin: 30px auto 0;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .logout-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(245, 87, 108, 0.4);
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            color: #667eea;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .password-input-group {
+                flex-direction: column;
+            }
+
+            .password-input-group button {
+                width: 100%;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-message h2 {
+                font-size: 1.6em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Приватная информация</h1>
+            <p>Защищенный доступ по паролю</p>
+        </div>
+
+        <div class="content">
+            <!-- Секция ввода пароля -->
+            <div id="passwordSection" class="password-section">
+                <h2>Введите пароль доступа</h2>
+                <p class="subtitle">Только для авторизованных пользователей</p>
+                
+                <div class="password-input-group">
+                    <input type="password" id="passwordInput" placeholder="****" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+                    <button onclick="checkPassword()">Войти</button>
+                </div>
+
+                <div class="password-hint">
+                    <i>🔑</i>
+                    <span>Введите 4-значный код доступа</span>
+                </div>
+
+                <div id="errorMessage" class="error-message"></div>
+            </div>
+
+            <!-- Защищенная информация -->
+            <div id="protectedSection" class="protected-section">
+                <div class="welcome-message">
+                    <h2>✨ Добро пожаловать!</h2>
+                    <p>Вы успешно авторизовались в системе</p>
+                </div>
+
+                <div class="info-grid">
+                    <!-- Карточка 1: Личная информация -->
+                    <div class="info-card">
+                        <div class="card-icon">👤</div>
+                        <h3>Личная информация</h3>
+                        <div class="info-content">
+                            <p>
+                                <span class="label">Имя:</span>
+                                <span class="value">[Введите ваше имя]</span>
+                            </p>
+                            <p>
+                                <span class="label">Email:</span>
+                                <span class="value">[Введите email]</span>
+                            </p>
+                            <p>
+                                <span class="label">Телефон:</span>
+                                <span class="value">[Введите телефон]</span>
+                            </p>
+                            <p>
+                                <span class="label">Дата:</span>
+                                <span class="value">[Введите дату]</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Карточка 2: Важные документы -->
+                    <div class="info-card">
+                        <div class="card-icon">📁</div>
+                        <h3>Важные документы</h3>
+                        <div class="info-content">
+                            <p>📄 • Документ 1: [Название]</p>
+                            <p>📄 • Документ 2: [Название]</p>
+                            <p>📄 • Документ 3: [Название]</p>
+                            <p>🔗 • Ссылка: [URL]</p>
+                        </div>
+                    </div>
+
+                    <!-- Карточка 3: Заметки и пароли -->
+                    <div class="info-card">
+                        <div class="card-icon">🔐</div>
+                        <h3>Безопасные данные</h3>
+                        <div class="info-content">
+                            <p>🔑 • Пароль 1: [********]</p>
+                            <p>🔑 • Пароль 2: [********]</p>
+                            <p>💳 • Пин-код: [****]</p>
+                            <p>📝 • Заметка: [Текст]</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Бейдж безопасности -->
+                <div class="security-badge">
+                    <span>🛡️</span>
+                    <span>Защищено шифрованием AES-256</span>
+                    <span>🛡️</span>
+                </div>
+
+                <button class="logout-btn" onclick="logout()">🚪 Выйти из системы</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ПРАВИЛЬНЫЙ ПАРОЛЬ - теперь просто сравниваем строки
+        const CORRECT_PASSWORD = "5289";
+        
+        // Функция проверки пароля
+        function checkPassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const errorMessage = document.getElementById('errorMessage');
+            const password = passwordInput.value.trim();
+
+            // Проверка на пустой ввод
+            if (!password) {
+                showError('❌ Введите пароль');
+                return;
+            }
+
+            // Проверка на длину
+            if (password.length !== 4) {
+                showError('❌ Пароль должен состоять из 4 цифр');
+                return;
+            }
+
+            // Проверка что это цифры
+            if (!/^\d+$/.test(password)) {
+                showError('❌ Пароль должен содержать только цифры');
+                return;
+            }
+
+            // ПРЯМОЕ СРАВНЕНИЕ (без хеширования)
+            if (password === CORRECT_PASSWORD) {
+                // Успешный вход
+                document.getElementById('passwordSection').style.display = 'none';
+                document.getElementById('protectedSection').style.display = 'block';
+                errorMessage.innerHTML = '';
+                passwordInput.value = '';
+                
+                // Сохраняем состояние в sessionStorage
+                sessionStorage.setItem('authenticated', 'true');
+                
+                // Анимация успеха
+                showSuccess();
+            } else {
+                // Неудачная попытка
+                showError('❌ Неверный пароль');
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // Встряхиваем поле ввода
+                passwordInput.style.borderColor = '#e74c3c';
+                setTimeout(() => {
+                    passwordInput.style.borderColor = '#e0e0e0';
+                }, 500);
+            }
+        }
+
+        // Функция показа ошибки
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.innerHTML = `<span>⚠️</span> ${message}`;
+            
+            // Дополнительная анимация
+            const input = document.getElementById('passwordInput');
+            input.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                input.style.animation = '';
+            }, 500);
+        }
+
+        // Функция показа успеха
+        function showSuccess() {
+            const container = document.querySelector('.container');
+            container.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                container.style.transform = '';
+            }, 200);
+        }
+
+        // Функция выхода
+        function logout() {
+            document.getElementById('protectedSection').style.display = 'none';
+            document.getElementById('passwordSection').style.display = 'block';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMessage').innerHTML = '';
+            sessionStorage.removeItem('authenticated');
+            
+            // Анимация возврата
+            document.getElementById('passwordSection').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('passwordSection').style.opacity = '1';
+            }, 100);
+        }
+
+        // Обработка нажатия Enter
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        }
+
+        // Проверка авторизации при загрузке
+        window.onload = function() {
+            // Добавляем обработчик на поле ввода
+            document.getElementById('passwordInput').addEventListener('keypress', handleKeyPress);
+            
+            // Фокус на поле ввода
+            document.getElementById('passwordInput').focus();
+            
+            // Проверяем sessionStorage
+            if (sessionStorage.getItem('authenticated') === 'true') {
+                document.getElementById('passwordSection').style.display = 'none';
+                document.getElementById('protectedSection').style.display = 'block';
+            }
+        };
+
+        // Защита от просмотра кода (базовая)
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+                alert('🔒 Инструменты разработчика отключены в целях безопасности');
+            }
+        });
+    </script>
+</body>
+</html>
